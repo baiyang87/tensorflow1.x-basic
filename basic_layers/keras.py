@@ -111,7 +111,7 @@ def softmax(inputs, axis=-1):
     return Softmax(axis=axis)(inputs)
 
 
-def batch_normalization(inputs, training=False):
+def batch_normalization(inputs, training=True):
     """
     Batch normalization
 
@@ -255,9 +255,6 @@ def upsample(inputs, factor, interpolation='nearest'):
     return UpSampling2D(size=factor, interpolation=interpolation)(inputs)
 
 
-# ---------------
-# derived layers
-# ---------------
 def instance_normalization(inputs):
     """
     Instance normalization layer
@@ -267,6 +264,89 @@ def instance_normalization(inputs):
     inputs: Input tensor
     """
     return InstanceNormalization()(inputs)
+
+
+# ---------------
+# combined layers
+# ---------------
+def conv_bn_relu(inputs, out_filters, ksize=(3, 3), strides=(1, 1),
+                 dilation=(1, 1), use_bn=True, use_relu=True, training=True):
+    """
+    Combine conv, batch normalization (bn), relu. bn and relu are optional
+
+    Parameters
+    ----------
+    inputs: Input tensor
+    out_filters: Number of output filters
+    ksize: Kernel size. One integer of tuple of two integers
+    strides: Strides for moving kernel. One integer of tuple of two integers
+    dilation: Dilation of kernel. One integer of tuple of two integers
+    use_bn: Whether to use bn
+    use_relu: Whether to use relu
+    training: Whether in training phase
+    """
+    use_bias = not use_bn
+
+    outputs = conv(inputs, out_filters, ksize, strides, dilation, use_bias)
+    if use_bn:
+        outputs = batch_normalization(outputs, training=training)
+    if use_relu:
+        outputs = relu(outputs)
+
+    return outputs
+
+
+def conv_in_relu(inputs, out_filters, ksize=(3, 3), strides=(1, 1),
+                 dilation=(1, 1), use_in=True, use_relu=True):
+    """
+    Combine conv, instance normalization (in), relu. in and relu are optional
+
+    Parameters
+    ----------
+    inputs: Input tensor
+    out_filters: Number of output filters
+    ksize: Kernel size. One integer of tuple of two integers
+    strides: Strides for moving kernel. One integer of tuple of two integers
+    dilation: Dilation of kernel. One integer of tuple of two integers
+    use_in: Whether to use instance normalization
+    use_relu: Whether to use relu
+    """
+    use_bias = not use_in
+
+    outputs = conv(inputs, out_filters, ksize, strides, dilation, use_bias)
+    if use_in:
+        outputs = instance_normalization(outputs)
+    if use_relu:
+        outputs = relu(outputs)
+
+    return outputs
+
+
+def conv_in_lrelu(inputs, out_filters, ksize=(3, 3), strides=(1, 1),
+                  dilation=(1, 1), use_in=True, use_lrelu=True, alpha=0.2):
+    """
+    Combine conv, instance normalization (in), leaky relu (lrelu).
+    in and lrelu are optional
+
+    Parameters
+    ----------
+    inputs: Input tensor
+    out_filters: Number of output filters
+    ksize: Kernel size. One integer of tuple of two integers
+    strides: Strides for moving kernel. One integer of tuple of two integers
+    dilation: Dilation of kernel. One integer of tuple of two integers
+    use_in: Whether to use instance normalization
+    use_lrelu: Whether to use leaky relu
+    """
+    use_bias = not use_in
+
+    outputs = conv(inputs, out_filters, ksize, strides, dilation, use_bias)
+    if use_in:
+        outputs = instance_normalization(outputs)
+    if use_lrelu:
+        outputs = leaky_relu(outputs, alpha=alpha)
+
+    return outputs
 
 
 # ---------------
