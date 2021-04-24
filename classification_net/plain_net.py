@@ -6,13 +6,6 @@ from basic_layers.tensorflow import maxpool
 from basic_layers.tensorflow import global_average_pool
 from basic_layers.tensorflow import softmax
 
-PLAIN_NET_CONFIG = {
-    'block_filters': [32, 64, 128, 256, 512],
-    'block_conv_nums': [2, 2, 2, 2, 2],
-    'num_classes': 10,
-    'use_bn': True,
-}
-
 
 class PlainNet(object):
     """
@@ -20,7 +13,12 @@ class PlainNet(object):
     """
 
     def __init__(self):
-        self.config = PLAIN_NET_CONFIG
+        self.config = {
+            'block_filters': [32, 64, 128, 256, 512],
+            'block_conv_nums': [2, 2, 2, 2, 2],
+            'num_classes': 10,
+            'use_bn': True,
+        }
         self.use_bn = self.config.get('use_bn')
         self.block_filters = self.config.get('block_filters')
         self.block_conv_nums = self.config.get('block_conv_nums')

@@ -6,14 +6,6 @@ from basic_layers.tensorflow import upsample
 from basic_layers.tensorflow import concat
 from basic_layers.tensorflow import softmax
 
-PLAIN_UNET_CONFIG = {
-    'block_filters': [32, 64, 128, 256, 512],
-    'block_conv_nums': [2, 2, 2, 2, 2],
-    'output_channel': 10,
-    'use_bn': True,
-    'interpolation_type': 'bilinear',
-}
-
 
 class PlainUnet(object):
     """
@@ -21,7 +13,13 @@ class PlainUnet(object):
     """
 
     def __init__(self):
-        self.config = PLAIN_UNET_CONFIG
+        self.config = {
+            'block_filters': [32, 64, 128, 256, 512],
+            'block_conv_nums': [2, 2, 2, 2, 2],
+            'output_channel': 10,
+            'use_bn': True,
+            'interpolation_type': 'bilinear',
+        }
         self.use_bn = self.config.get('use_bn')
         self.interpolation_type = self.config.get('interpolation_type')
         self.block_filters = self.config.get('block_filters')

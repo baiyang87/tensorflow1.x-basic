@@ -8,16 +8,6 @@ from basic_layers.tensorflow import add
 from basic_layers.tensorflow import relu
 from basic_layers.tensorflow import softmax
 
-RES_UNET_CONFIG = {
-    'block_filters': [32, 64, 128, 256, 512],
-    'block_res_nums': [2, 2, 2, 2, 2],
-    'output_channel': 10,
-    'use_bn': True,
-    'interpolation_type': 'bilinear',
-    'shrink_factor': 4,
-    'bottleneck': False,
-}
-
 
 class ResUnet(object):
     """
@@ -25,7 +15,15 @@ class ResUnet(object):
     """
 
     def __init__(self):
-        self.config = RES_UNET_CONFIG
+        self.config = {
+            'block_filters': [32, 64, 128, 256, 512],
+            'block_res_nums': [2, 2, 2, 2, 2],
+            'output_channel': 10,
+            'use_bn': True,
+            'interpolation_type': 'bilinear',
+            'shrink_factor': 4,
+            'bottleneck': False,
+        }
         self.use_bn = self.config.get('use_bn')
         self.interpolation_type = self.config.get('interpolation_type')
         self.block_filters = self.config.get('block_filters')
