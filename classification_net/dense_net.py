@@ -19,10 +19,10 @@ class DenseNet:
     def __init__(self):
         self.config = {
             'block_filters': [32, 64, 128, 256, 512],
-            'block_dense_nums': [2, 4, 8, 8, 16],
+            'block_dense_nums': [2, 4, 8, 8, 8],
             'num_classes': 10,
             'use_bn': True,
-            'growth_rate': 16,
+            'growth_rates': [0, 16, 16, 32, 32],
             'bottleneck': True,
             'bottleneck_factor': 4,
             'dropout_rate': 0.2,
@@ -53,7 +53,7 @@ class DenseNet:
         outputs = conv(outputs, out_filters, ksize=ksize, use_bias=use_bias)
         return outputs
 
-    def build_one_dense_block(self, inputs):
+    def build_one_dense_block(self, inputs, growth_rate):
         """
         Build one dense conv block
 
@@ -63,11 +63,11 @@ class DenseNet:
         """
         if self.config.get('bottleneck'):
             shrinked_filters = self.config.get('bottleneck_factor') * \
-                               self.config.get('growth_rate')
+                               growth_rate
             branch = self.conv_block(inputs, shrinked_filters, ksize=1)
-            branch = self.conv_block(branch, self.growth_rate, ksize=3)
+            branch = self.conv_block(branch, growth_rate, ksize=3)
         else:
-            branch = self.conv_block(inputs, self.growth_rate, ksize=3)
+            branch = self.conv_block(inputs, growth_rate, ksize=3)
 
         if self.config.get('dropout_rate'):
             branch = dropout(branch, self.config.get('dropout_rate'))
@@ -76,7 +76,7 @@ class DenseNet:
         return outputs
 
     def build_dense_blocks(self, inputs, out_filters, block_dense_num,
-                           first_blocks):
+                           growth_rate, first_blocks):
         """
         Build multiple residual blocks
 
@@ -85,7 +85,8 @@ class DenseNet:
         inputs: Input tensor
         out_filters: Number of output filters
         block_dense_num: Number of dense blocks
-        first_blocks: Whether the first_blocks (before first pooling layer).
+        growth_rate:
+        first_blocks: Whether is the first_blocks (before first pooling layer).
             The first_blocks is not implemented by dense blocks but plain
             conv layers
         """
@@ -100,7 +101,7 @@ class DenseNet:
                                        training=self.training)
         else:
             for _ in range(block_dense_num):
-                outputs = self.build_one_dense_block(outputs)
+                outputs = self.build_one_dense_block(outputs, growth_rate)
 
         outputs = self.conv_block(outputs, out_filters, ksize=1)
         return outputs
@@ -116,8 +117,11 @@ class DenseNet:
         outputs = inputs
         for i, filters in enumerate(self.block_filters):
             first_blocks = i == 0
-            outputs = self.build_dense_blocks(outputs, filters,
+            growth_rate = self.config.get('growth_rates')[i]
+            outputs = self.build_dense_blocks(outputs,
+                                              filters,
                                               self.block_dense_nums[i],
+                                              growth_rate,
                                               first_blocks)
 
             if i != len(self.block_filters) - 1:
