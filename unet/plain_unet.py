@@ -7,7 +7,7 @@ from basic_layers.tensorflow import concat
 from basic_layers.tensorflow import softmax
 
 
-class PlainUnet(object):
+class PlainUnet:
     """
     Unet with plain conv blocks as backbone
     """
@@ -29,7 +29,7 @@ class PlainUnet(object):
     def build_blocks(self, inputs, out_filters, block_conv_num):
         """
         Build plain conv blocks
-        
+
         Parameters
         ----------
         inputs: Input tensor

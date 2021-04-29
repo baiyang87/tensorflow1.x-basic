@@ -9,7 +9,7 @@ from basic_layers.tensorflow import relu
 from basic_layers.tensorflow import softmax
 
 
-class ResUnet(object):
+class ResUnet:
     """
     Unet with residual blocks as backbone
     """

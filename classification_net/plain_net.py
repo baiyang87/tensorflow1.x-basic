@@ -7,7 +7,7 @@ from basic_layers.tensorflow import global_average_pool
 from basic_layers.tensorflow import softmax
 
 
-class PlainNet(object):
+class PlainNet:
     """
     Classification net with plain conv blocks as backbone
     """

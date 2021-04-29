@@ -8,7 +8,7 @@ from basic_layers.tensorflow import global_average_pool
 from basic_layers.tensorflow import softmax
 
 
-class ResNet(object):
+class ResNet:
     """
     Classification net with with residual blocks as backbone
     """
@@ -80,11 +80,12 @@ class ResNet(object):
         inputs: Input tensor
         out_filters: Number of output filters
         block_res_num: Number of residual blocks
-        first_blocks: Whether the first_blocks. The first_blocks is not
-            implemented by residual blocks but plain blocks
+        first_blocks: Whether the first_blocks (before first pooling layer).
+            The first_blocks is not implemented by residual blocks but plain
+            conv layers
         """
         if block_res_num < 1:
-            raise ValueError('block_conv_num must be >= 1')
+            raise ValueError('block_res_num must be >= 1')
 
         outputs = inputs
         if first_blocks:
