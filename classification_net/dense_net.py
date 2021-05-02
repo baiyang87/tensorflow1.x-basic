@@ -60,6 +60,7 @@ class DenseNet:
         Parameters
         ----------
         inputs: Input tensor
+        growth_rate: number of channel growth for each dense block
         """
         if self.config.get('bottleneck'):
             shrinked_filters = self.config.get('bottleneck_factor') * \
@@ -85,7 +86,7 @@ class DenseNet:
         inputs: Input tensor
         out_filters: Number of output filters
         block_dense_num: Number of dense blocks
-        growth_rate: number of channel growth after each dense block
+        growth_rate: number of channel growth for each dense block
         first_blocks: Whether is the first_blocks (before first pooling layer).
             The first_blocks is not implemented by dense blocks but plain
             conv layers
