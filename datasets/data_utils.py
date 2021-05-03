@@ -2,6 +2,7 @@
 import os
 from urllib import request
 import gzip
+import tarfile
 
 
 def download(url, folder=None, filename=None):
@@ -57,7 +58,8 @@ def extract_gz(gz_path, folder=None, decompressed_filename=None):
     gz_path: Path of .gz file
     folder: Folder where to decompress .gz file, default is the same folder as
         gz_path
-    decompressed_filename: The filename of decompressed .gz file
+    decompressed_filename: The filename of decompressed .gz file, default is
+        the same as .gz file but without .gz extension
     """
     if folder is None:
         folder = os.path.split(gz_path)[0]
@@ -70,3 +72,22 @@ def extract_gz(gz_path, folder=None, decompressed_filename=None):
     print("extract '%s' to get '%s'" % (gz_path, decompressed_path))
     with gzip.GzipFile(gz_path) as gz_file:
         open(decompressed_path, "wb+").write(gz_file.read())
+
+
+def extract_tar(tar_path, folder=None):
+    """
+    Extract .tar file, including .tar.gz, .tar.bz2 et al.
+
+    Parameters
+    ----------
+    tar_path: Path of .tar file
+    folder: Folder where to decompress .tar file, default is the same folder as
+        tar_path
+    """
+    if folder is None:
+        folder = os.path.split(tar_path)[0]
+    os.makedirs(folder, exist_ok=True)
+
+    print("extract '%s' at %s" % (tar_path, folder))
+    with tarfile.open(tar_path) as tar:
+        tar.extractall(path=folder)
