@@ -50,6 +50,12 @@ class PlainNet:
         Parameters
         ----------
         inputs: Input tensor
+
+        Returns
+        -------
+        outputs: Predictions of network, shape is (batch, num_classes).
+            The outputs are called logits for classification net because the
+            softmax activations are not applied in this forward process
         """
         outputs = inputs
         for i, filters in enumerate(self.block_filters):
@@ -65,5 +71,4 @@ class PlainNet:
             outputs = batch_normalization(outputs, training=self.training)
 
         outputs = dense(outputs, self.config.get('num_classes'))
-        outputs = softmax(outputs)
         return outputs
