@@ -7,7 +7,6 @@ from basic_layers.tensorflow import concat
 from basic_layers.tensorflow import relu
 from basic_layers.tensorflow import maxpool
 from basic_layers.tensorflow import global_average_pool
-from basic_layers.tensorflow import softmax
 from basic_layers.tensorflow import dropout
 
 

@@ -4,7 +4,6 @@ from basic_layers.tensorflow import dense
 from basic_layers.tensorflow import batch_normalization
 from basic_layers.tensorflow import maxpool
 from basic_layers.tensorflow import global_average_pool
-from basic_layers.tensorflow import softmax
 
 
 class PlainNet:
