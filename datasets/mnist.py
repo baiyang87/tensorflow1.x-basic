@@ -120,9 +120,3 @@ def parse_mnist_labels(filename):
         labels = struct.unpack('>%dB' % item_number, file_content[8:])
         labels = np.array(labels)
     return labels
-
-
-path = r'D:\data\mnist'
-data = load(path)
-for key in data.keys():
-    print(key, data.get(key).shape)
