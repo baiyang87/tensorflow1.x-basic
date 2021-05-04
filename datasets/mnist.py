@@ -28,7 +28,8 @@ DECOMPRESSED_FILENAMES = {
 
 def load(folder=None):
     """
-    Load mnist data from folder
+    Load mnist data from folder. If the data does NOT exist then download and
+    decompress it.
 
     Parameters
     ----------
@@ -37,6 +38,12 @@ def load(folder=None):
     Returns
     -------
     data: Parsed mnist data and labels in dict type
+        data = {
+            'train_data': (60000, 28, 28) numpy array,
+            'train_labels': (60000,) numpy array,
+            'test_data': (10000, 28, 28) numpy array,
+            'test_labels': (10000,) numpy array,
+        }
     """
     if folder is None:
         folder = '.'
@@ -113,3 +120,9 @@ def parse_mnist_labels(filename):
         labels = struct.unpack('>%dB' % item_number, file_content[8:])
         labels = np.array(labels)
     return labels
+
+
+path = r'D:\data\mnist'
+data = load(path)
+for key in data.keys():
+    print(key, data.get(key).shape)

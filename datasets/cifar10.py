@@ -22,7 +22,7 @@ DECOMPRESSED_FILENAMES = {
 
 def load(folder=None):
     """
-    Load CIFAR10 data from folder. If it does NOT exist then download and
+    Load CIFAR10 data from folder. If the data does NOT exist then download and
     decompress it.
 
     Parameters
