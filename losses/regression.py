@@ -12,6 +12,8 @@ def mean_absolute_error(labels, predictions):
     labels: The ground truth output tensor, same dimensions as 'predictions'
     predictions: The predicted output tensor
     """
+    labels = tf.to_float(labels)
+    predictions = tf.to_float(predictions)
     return tf.reduce_mean(tf.abs(labels - predictions))
 
 
@@ -25,6 +27,8 @@ def mean_squared_error(labels, predictions):
     labels: The ground truth output tensor, same dimensions as 'predictions'
     predictions: The predicted output tensor
     """
+    labels = tf.to_float(labels)
+    predictions = tf.to_float(predictions)
     return tf.reduce_mean(tf.square(labels - predictions))
 
 
@@ -48,6 +52,9 @@ def huber_loss(labels, predictions, delta=1.0):
     delta: `float`, the point where the huber loss function changes from a
         quadratic to linear.
     """
+    labels = tf.to_float(labels)
+    predictions = tf.to_float(predictions)
+    
     abs_error = tf.abs(labels - predictions)
     condition = tf.less(abs_error, delta)
     quadratic = 0.5 * tf.square(abs_error)
