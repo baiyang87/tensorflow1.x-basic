@@ -5,6 +5,7 @@ import tensorflow as tf
 def softmax_cross_entropy(onehot_labels, logits):
     """
     Cross entropy computed by softmax logits.
+    (refer to `tf.losses.softmax_cross_entropy`)
 
     Parameters
     ----------
@@ -21,6 +22,7 @@ def softmax_cross_entropy(onehot_labels, logits):
 def sigmoid_cross_entropy(labels, logits):
     """
     Cross entropy computed by sigmoid logits.
+    (refer to `tf.losses.sigmoid_cross_entropy`)
 
     Parameters
     ----------
