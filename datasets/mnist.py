@@ -30,6 +30,7 @@ def load(folder=None):
     """
     Load mnist data from folder. If the data does NOT exist then download and
     decompress it.
+    Data url: http://yann.lecun.com/exdb/mnist/
 
     Parameters
     ----------
