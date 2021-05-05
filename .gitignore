@@ -1,5 +1,8 @@
 # added by user
 .idea/
+*.gz
+*.tar
+*-ubyte
 
 
 # Byte-compiled / optimized / DLL files
