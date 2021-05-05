@@ -56,21 +56,21 @@ def load(folder=None):
         # dowanload and decompress data, if needed
         downloaded_filename = filenames.get(name)
         downloaded_filename = os.path.join(folder, downloaded_filename)
-        decompressed_filename = DECOMPRESSED_FILENAMES.get(name)
-        decompressed_filename = os.path.join(folder, decompressed_filename)
+        decompressed_file_path = DECOMPRESSED_FILENAMES.get(name)
+        decompressed_file_path = os.path.join(folder, decompressed_file_path)
 
-        if not os.path.exists(decompressed_filename):
+        if not os.path.exists(decompressed_file_path):
             if not os.path.exists(downloaded_filename):
                 url = URLS.get(name)
                 download(url, folder)
 
-            extract_gz(downloaded_filename, folder, decompressed_filename)
+            extract_gz(downloaded_filename, decompressed_file_path)
 
         # parse data
         if 'data' in name:
-            data[name] = parse_mnist_images(decompressed_filename)
+            data[name] = parse_mnist_images(decompressed_file_path)
         elif 'labels' in name:
-            data[name] = parse_mnist_labels(decompressed_filename)
+            data[name] = parse_mnist_labels(decompressed_file_path)
 
     return data
 

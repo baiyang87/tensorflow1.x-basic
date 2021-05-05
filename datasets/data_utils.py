@@ -49,28 +49,49 @@ def get_filenames_from_urls(urls):
     return filenames
 
 
-def extract_gz(gz_path, folder=None, decompressed_filename=None):
+def extract_gz(gz_path, decompressed_file_path=None):
     """
     Extract gzip (.gz) file
 
     Parameters
     ----------
     gz_path: Path of .gz file
-    folder: Folder where to decompress .gz file, default is the same folder as
-        gz_path
-    decompressed_filename: The filename of decompressed .gz file, default is
+    decompressed_file_path: The filename of decompressed .gz file, default is
         the same as .gz file but without .gz extension
     """
-    if folder is None:
-        folder = os.path.split(gz_path)[0]
+    if decompressed_file_path is None:
+        decompressed_file_path = gz_path.replace('.gz', '')
+
+    folder = os.path.split(decompressed_file_path)[0]
     os.makedirs(folder, exist_ok=True)
 
-    if decompressed_filename is None:
-        decompressed_filename = gz_path.replace('.gz', '')
-
-    print("extract '%s' to get '%s'" % (gz_path, decompressed_filename))
+    print("extract '%s' to get '%s'" % (gz_path, decompressed_file_path))
     with gzip.GzipFile(gz_path) as gz_file:
-        open(decompressed_filename, "wb+").write(gz_file.read())
+        open(decompressed_file_path, "wb+").write(gz_file.read())
+
+
+# def extract_gz(gz_path, folder=None, decompressed_filename=None):
+#     """
+#     Extract gzip (.gz) file
+#
+#     Parameters
+#     ----------
+#     gz_path: Path of .gz file
+#     folder: Folder where to decompress .gz file, default is the same folder as
+#         gz_path
+#     decompressed_filename: The filename of decompressed .gz file, default is
+#         the same as .gz file but without .gz extension
+#     """
+#     if folder is None:
+#         folder = os.path.split(gz_path)[0]
+#     os.makedirs(folder, exist_ok=True)
+#
+#     if decompressed_filename is None:
+#         decompressed_filename = gz_path.replace('.gz', '')
+#
+#     print("extract '%s' to get '%s'" % (gz_path, decompressed_filename))
+#     with gzip.GzipFile(gz_path) as gz_file:
+#         open(decompressed_filename, "wb+").write(gz_file.read())
 
 
 def extract_tar(tar_path, folder=None):
