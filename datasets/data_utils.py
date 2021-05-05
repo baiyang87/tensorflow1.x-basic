@@ -68,10 +68,9 @@ def extract_gz(gz_path, folder=None, decompressed_filename=None):
     if decompressed_filename is None:
         decompressed_filename = gz_path.replace('.gz', '')
 
-    decompressed_path = os.path.join(folder, decompressed_filename)
-    print("extract '%s' to get '%s'" % (gz_path, decompressed_path))
+    print("extract '%s' to get '%s'" % (gz_path, decompressed_filename))
     with gzip.GzipFile(gz_path) as gz_file:
-        open(decompressed_path, "wb+").write(gz_file.read())
+        open(decompressed_filename, "wb+").write(gz_file.read())
 
 
 def extract_tar(tar_path, folder=None):
