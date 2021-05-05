@@ -70,30 +70,6 @@ def extract_gz(gz_path, decompressed_file_path=None):
         open(decompressed_file_path, "wb+").write(gz_file.read())
 
 
-# def extract_gz(gz_path, folder=None, decompressed_filename=None):
-#     """
-#     Extract gzip (.gz) file
-#
-#     Parameters
-#     ----------
-#     gz_path: Path of .gz file
-#     folder: Folder where to decompress .gz file, default is the same folder as
-#         gz_path
-#     decompressed_filename: The filename of decompressed .gz file, default is
-#         the same as .gz file but without .gz extension
-#     """
-#     if folder is None:
-#         folder = os.path.split(gz_path)[0]
-#     os.makedirs(folder, exist_ok=True)
-#
-#     if decompressed_filename is None:
-#         decompressed_filename = gz_path.replace('.gz', '')
-#
-#     print("extract '%s' to get '%s'" % (gz_path, decompressed_filename))
-#     with gzip.GzipFile(gz_path) as gz_file:
-#         open(decompressed_filename, "wb+").write(gz_file.read())
-
-
 def extract_tar(tar_path, folder=None):
     """
     Extract .tar file, including .tar.gz, .tar.bz2 et al.
