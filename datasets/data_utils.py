@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import numpy as np
 from urllib import request
 import gzip
 import tarfile
@@ -47,6 +48,27 @@ def get_filenames_from_urls(urls):
         url = urls.get(name)
         filenames[name] = os.path.split(url)[-1]
     return filenames
+
+
+def make_one_hot_labels(labels, num_classes, dtype=np.int32):
+    """
+    Transform classification labels represented by indices into one-hot labels,
+    where the locations in `indices` take value 1 while all other locations
+    take value 0
+
+    Parameters
+    ----------
+    labels: labels represented by indices
+    num_classes: number of classes
+    dtype: output data type
+
+    Returns
+    -------
+    one_hot_labels: one-hot encoded labels
+    """
+    one_hot_labels = (labels[:, None] == np.arange(num_classes))
+    one_hot_labels = one_hot_labels.astype(dtype)
+    return one_hot_labels
 
 
 def extract_gz(gz_path, decompressed_file_path=None):
