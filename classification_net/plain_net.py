@@ -16,11 +16,8 @@ class PlainNet:
             'block_filters': [32, 64, 128, 256, 512],
             'block_conv_nums': [2, 2, 2, 2, 2],
             'num_classes': 10,
-            'use_bn': True,
+            'use_bn': False,
         }
-        self.use_bn = self.config.get('use_bn')
-        self.block_filters = self.config.get('block_filters')
-        self.block_conv_nums = self.config.get('block_conv_nums')
         self.training = True
 
     def build_blocks(self, inputs, out_filters, block_conv_num):
@@ -33,13 +30,15 @@ class PlainNet:
         out_filters: Number of output filters
         block_conv_num: Number of conv layers in block
         """
+        use_bn = self.config.get('use_bn')
+
         if block_conv_num < 1:
             raise ValueError('block_conv_num must be >= 1')
 
         outputs = inputs
         for _ in range(block_conv_num):
             outputs = conv_bn_relu(outputs, out_filters, 3, 1, 1,
-                                   use_bn=self.use_bn, training=self.training)
+                                   use_bn=use_bn, training=self.training)
         return outputs
 
     def forward(self, inputs):
@@ -56,17 +55,21 @@ class PlainNet:
             The outputs are called logits for classification net because the
             softmax activations are not applied in this forward process
         """
-        outputs = inputs
-        for i, filters in enumerate(self.block_filters):
-            outputs = self.build_blocks(outputs, filters,
-                                        self.block_conv_nums[i])
+        use_bn = self.config.get('use_bn')
+        block_filters = self.config.get('block_filters')
+        block_conv_nums = self.config.get('block_conv_nums')
 
-            if i != len(self.block_filters) - 1:
+        outputs = inputs
+        for i, filters in enumerate(block_filters):
+            outputs = self.build_blocks(outputs, filters,
+                                        block_conv_nums[i])
+
+            if i != len(block_filters) - 1:
                 outputs = maxpool(outputs, pool_size=2)
             else:
                 outputs = global_average_pool(outputs)
 
-        if self.use_bn:
+        if use_bn:
             outputs = batch_normalization(outputs, training=self.training)
 
         outputs = dense(outputs, self.config.get('num_classes'))
