@@ -21,9 +21,11 @@ def accuracy(labels, predictions):
     """
     is_correct = tf.equal(labels, predictions)
 
-    correct_num = int(tf.reduce_sum(is_correct))
-    total_num = int(predictions.get_shape()[0])
-    acc = float(correct_num) / float(total_num)
+    is_correct = tf.cast(is_correct, dtype=tf.float32)
+    correct_num = tf.cast(tf.reduce_sum(is_correct), dtype=tf.float32)
+    total_num = tf.cast(tf.shape(predictions)[0], dtype=tf.float32)
+    acc = correct_num / total_num
+
     return acc, correct_num, total_num
 
 
@@ -57,7 +59,8 @@ def logits_accuracy(onehot_labels, logits, activation='softmax'):
     else:
         raise ValueError("activation must be one of ['softmax', 'sigmoid']")
 
-    correct_num = int(tf.reduce_sum(is_correct))
-    total_num = int(logits.get_shape()[0])
-    acc = float(correct_num) / float(total_num)
+    is_correct = tf.cast(is_correct, dtype=tf.float32)
+    correct_num = tf.cast(tf.reduce_sum(is_correct), dtype=tf.float32)
+    total_num = tf.cast(tf.shape(logits)[0], dtype=tf.float32)
+    acc = correct_num / total_num
     return acc, correct_num, total_num
