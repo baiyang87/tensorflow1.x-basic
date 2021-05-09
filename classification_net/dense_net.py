@@ -26,11 +26,6 @@ class DenseNet:
             'bottleneck_factor': 4,
             'dropout_rate': 0.2,
         }
-        self.use_bn = self.config.get('use_bn')
-        self.interpolation_type = self.config.get('interpolation_type')
-        self.block_filters = self.config.get('block_filters')
-        self.block_dense_nums = self.config.get('block_dense_nums')
-        self.growth_rate = self.config.get('growth_rate')
         self.training = True
 
     def conv_block(self, inputs, out_filters, ksize):
@@ -43,10 +38,11 @@ class DenseNet:
         out_filters: Number of output filters
         ksize: Kernel size. One integer of tuple of two integers
         """
-        use_bias = not self.use_bn
-        outputs = inputs
+        use_bn = self.config.get('use_bn')
+        use_bias = not use_bn
 
-        if self.use_bn:
+        outputs = inputs
+        if use_bn:
             outputs = batch_normalization(outputs, training=self.training)
         outputs = relu(outputs)
         outputs = conv(outputs, out_filters, ksize=ksize, use_bias=use_bias)
@@ -90,6 +86,8 @@ class DenseNet:
             The first_blocks is not implemented by dense blocks but plain
             conv layers
         """
+        use_bn = self.config.get('use_bn')
+
         if block_dense_num < 1:
             raise ValueError('block_dense_num must be >= 1')
 
@@ -97,8 +95,7 @@ class DenseNet:
         if first_blocks:
             for _ in range(block_dense_num):
                 outputs = conv_bn_relu(outputs, out_filters, 3, 1, 1,
-                                       use_bn=self.use_bn,
-                                       training=self.training)
+                                       use_bn=use_bn, training=self.training)
         else:
             for _ in range(block_dense_num):
                 outputs = self.build_one_dense_block(outputs, growth_rate)
@@ -120,17 +117,20 @@ class DenseNet:
             The outputs are called logits for classification net because the
             softmax activations are not applied in this forward process
         """
+        block_filters = self.config.get('block_filters')
+        block_dense_nums = self.config.get('block_dense_nums')
+
         outputs = inputs
-        for i, filters in enumerate(self.block_filters):
+        for i, filters in enumerate(block_filters):
             first_blocks = i == 0
             growth_rate = self.config.get('growth_rates')[i]
             outputs = self.build_dense_blocks(outputs,
                                               filters,
-                                              self.block_dense_nums[i],
+                                              block_dense_nums[i],
                                               growth_rate,
                                               first_blocks)
 
-            if i != len(self.block_filters) - 1:
+            if i != len(block_filters) - 1:
                 outputs = maxpool(outputs, pool_size=2)
             else:
                 outputs = global_average_pool(outputs)
