@@ -7,6 +7,10 @@ if __name__ == '__main__':
     net = PlainNet()
     net.config['num_classes'] = 20
     net.config['block_filters'] = [32, 64, 128]
-    net.config['block_conv_nums'] = [2, 2, 2]
+    net.config['block_conv_nums'] = [3, 2, 1]
     outputs = net.forward(inputs)
     print(outputs)
+
+    print()
+    for var in tf.trainable_variables():
+        print(var)
