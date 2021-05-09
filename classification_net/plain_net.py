@@ -16,7 +16,7 @@ class PlainNet:
             'block_filters': [32, 64, 128, 256, 512],
             'block_conv_nums': [2, 2, 2, 2, 2],
             'num_classes': 10,
-            'use_bn': False,
+            'use_bn': True,
         }
         self.training = True
 
