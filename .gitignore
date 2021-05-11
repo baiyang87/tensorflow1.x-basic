@@ -3,6 +3,7 @@
 *.gz
 *.tar
 *-ubyte
+*saved_model/
 
 
 # Byte-compiled / optimized / DLL files
