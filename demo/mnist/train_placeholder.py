@@ -82,13 +82,16 @@ def train():
     # initialization
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
+    saver = tf.train.Saver(max_to_keep=None)
+    global_step = 0
 
     for i in range(EPOCH):
-        print('-' * 20, '%d epoch' % (i + 1), '-' * 20)
+        print('-' * 20, 'epoch %d' % (i + 1), '-' * 20)
 
         # train
         train_data, train_labels = random_shuffle(train_data, train_labels)
         for index_beg in range(0, num_train, TRAIN_BATCH_SIZE):
+            global_step += 1
             index_end = min(index_beg + TRAIN_BATCH_SIZE, num_train)
             batch_data, batch_labels = load_batch(train_data, train_labels,
                                                   index_beg, TRAIN_BATCH_SIZE)
@@ -114,6 +117,7 @@ def train():
         print()
 
         # save model
+        saver.save(sess, 'saved_model/model', global_step=global_step)
 
 
 if __name__ == '__main__':
