@@ -3,7 +3,12 @@
 *.gz
 *.tar
 *-ubyte
-*saved_model/
+*.pb
+*.index
+*.meta
+*.data*
+checkpoint
+
 
 
 # Byte-compiled / optimized / DLL files
