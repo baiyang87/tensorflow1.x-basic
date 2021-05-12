@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import numpy as np
 import tensorflow as tf
 
@@ -10,8 +11,9 @@ from metrics import logits_accuracy
 
 # parameters
 DATA_FOLDER = r'.\data'
+SAVE_MODEL_PREFIX = r'.\saved_model\model'
 NUM_CLASSES = 10
-EPOCH = 10
+EPOCH = 2
 TRAIN_BATCH_SIZE = 64
 TEST_BATCH_SIZE = 32
 
@@ -82,7 +84,8 @@ def train():
     # initialization
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    saver = tf.train.Saver(max_to_keep=None)
+    saved_variables = tf.trainable_variables()
+    saver = tf.train.Saver(var_list=saved_variables, max_to_keep=None)
     global_step = 0
 
     for i in range(EPOCH):
@@ -117,7 +120,8 @@ def train():
         print()
 
         # save model
-        saver.save(sess, 'saved_model/model', global_step=global_step)
+        os.makedirs(os.path.split(SAVE_MODEL_PREFIX)[0], exist_ok=True)
+        saver.save(sess, SAVE_MODEL_PREFIX, global_step=global_step)
 
 
 if __name__ == '__main__':
